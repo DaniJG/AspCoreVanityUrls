@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using VanityUrls.Models;
 using VanityUrls.Models.ProfileViewModel;
+using VanityUrls.Features;
 
 namespace VanityUrls.Controllers
 {
@@ -20,7 +21,13 @@ namespace VanityUrls.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var resolvedUserFeature = HttpContext.Features.Get<VanityUrlResolvedUser>();
+            var user = resolvedUserFeature?.User;
+            if (user == null)
+            {
+                user = await _userManager.FindByIdAsync(id);
+            }
+
             return View(new Profile { Email = user.Email, Name = user.UserName, VanityUrl = user.VanityUrl });
         }
     }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using VanityUrls.Features;
 using VanityUrls.Models;
 
 namespace VanityUrls.Middleware
@@ -55,6 +56,9 @@ namespace VanityUrls.Middleware
             //If we got this far, the url matches a vanity url, which can be resolved to the profile details page of the user
             //Replace the request path so the next middleware (MVC) uses the resolved path
             context.Request.Path = String.Format(_resolvedProfileUrlFormat, user.Id);
+
+            //Save the user as a request feature so we don't need to fetch it again from the DB
+            context.Features.Set<VanityUrlResolvedUser>(new VanityUrlResolvedUser { User = user });
         }
 
         private bool IsVanityUrl(string path)
