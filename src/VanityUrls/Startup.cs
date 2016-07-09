@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using VanityUrls.Data;
 using VanityUrls.Models;
 using VanityUrls.Services;
+using VanityUrls.Middleware;
 
 namespace VanityUrls
 {
@@ -69,6 +70,7 @@ namespace VanityUrls
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseStatusCodePages();
                 app.UseBrowserLink();
             }
             else
@@ -82,6 +84,8 @@ namespace VanityUrls
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 
+
+            app.UseMiddleware<VanityUrlsMiddleware>();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
