@@ -43,7 +43,12 @@ namespace VanityUrls
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(opts => 
+                {
+                    opts.Password.RequireNonAlphanumeric = false;
+                    opts.Password.RequireUppercase = false;
+                    opts.Password.RequireDigit = false;                    
+                })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 

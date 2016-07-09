@@ -8,6 +8,8 @@ namespace VanityUrls.Models.ManageViewModels
 {
     public class IndexViewModel
     {
+        public string VanityUrl { get; set; }
+
         public bool HasPassword { get; set; }
 
         public IList<UserLoginInfo> Logins { get; set; }
