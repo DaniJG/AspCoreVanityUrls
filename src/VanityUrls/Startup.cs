@@ -13,6 +13,7 @@ using VanityUrls.Data;
 using VanityUrls.Models;
 using VanityUrls.Services;
 using VanityUrls.Middleware;
+using VanityUrls.Configuration;
 
 namespace VanityUrls
 {
@@ -40,6 +41,10 @@ namespace VanityUrls
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Add options and configure them
+            services.AddOptions();
+            services.Configure<VanityUrlsMiddlewareOptions>(Configuration.GetSection("VanityUrlsMiddlewareOptions"));
+
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -57,7 +62,7 @@ namespace VanityUrls
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<ISmsSender, AuthMessageSender>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

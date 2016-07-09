@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using VanityUrls.Configuration;
 using VanityUrls.Features;
 using VanityUrls.Models;
 
@@ -14,14 +16,15 @@ namespace VanityUrls.Middleware
     public class VanityUrlsMiddleware
     {
         private readonly Regex _vanityUrlRegex = new Regex(@"[a-z\.\-]+");
-        private readonly string _resolvedProfileUrlFormat = "/profile/details/{0}";
+        private readonly string _resolvedProfileUrlFormat;
         private readonly RequestDelegate _next;
         private readonly UserManager<ApplicationUser> _userManager;
         
-        public VanityUrlsMiddleware(RequestDelegate next, UserManager<ApplicationUser> userManager)
+        public VanityUrlsMiddleware(RequestDelegate next, UserManager<ApplicationUser> userManager, IOptions<VanityUrlsMiddlewareOptions> options)
         {
             _next = next;
             _userManager = userManager;
+            _resolvedProfileUrlFormat = options.Value.ResolvedProfileUrlFormat;
         }
 
         public async Task Invoke(HttpContext context)
