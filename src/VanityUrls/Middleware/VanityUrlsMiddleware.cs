@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace VanityUrls.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            HandleVanityUrl(context);
+            await HandleVanityUrl(context);
 
             //Let the next middleware (MVC routing) handle the request
             //In case the path was updated, the MVC routing will see the updated path
@@ -37,7 +38,7 @@ namespace VanityUrls.Middleware
 
         }
 
-        private void HandleVanityUrl(HttpContext context)
+        private async Task HandleVanityUrl(HttpContext context)
         {
             //get path from request
             var path = context.Request.Path.ToUriComponent();
@@ -53,7 +54,7 @@ namespace VanityUrls.Middleware
             }
 
             //Check if a user with this vanity url can be found
-            var user = _userManager.Users.SingleOrDefault(u => u.VanityUrl.Equals(path));
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.VanityUrl.Equals(path, StringComparison.CurrentCultureIgnoreCase));
             if (user == null) return;
 
             //If we got this far, the url matches a vanity url, which can be resolved to the profile details page of the user
@@ -61,7 +62,7 @@ namespace VanityUrls.Middleware
             context.Request.Path = String.Format(_resolvedProfileUrlFormat, user.Id);
 
             //Save the user as a request feature so we don't need to fetch it again from the DB
-            context.Features.Set<VanityUrlResolvedUser>(new VanityUrlResolvedUser { User = user });
+            context.Features.Set(new VanityUrlResolvedUser { User = user });
         }
 
         private bool IsVanityUrl(string path)
