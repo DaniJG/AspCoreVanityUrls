@@ -1,0 +1,29 @@
+@model VanityUrls.Models.ProfileViewModel.Profile
+
+@{
+    ViewData["Title"] = Model.Name + " Details";
+}
+
+<h2>User Details</h2>
+
+<div>
+    <h4>@Html.DisplayFor(model => model.Name)</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.VanityUrl)
+        </dt>
+        <dd>
+            <a href="/@Model.VanityUrl">@Url.AbsoluteContent(Model.VanityUrl)</a>
+        </dd>
+    </dl>
+</div>
+@*<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ })
+</div>*@
