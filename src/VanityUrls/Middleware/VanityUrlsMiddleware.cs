@@ -16,7 +16,7 @@ namespace VanityUrls.Middleware
     //See http://stackoverflow.com/questions/36179304/dynamic-url-rewriting-with-mvc-and-asp-net-core/36180880#36180880
     public class VanityUrlsMiddleware
     {
-        private readonly Regex _vanityUrlRegex = new Regex(@"[a-z\.\-]+");
+        private readonly Regex _vanityUrlRegex = new Regex(@"[a-z0-9\.\-]+");
         private readonly string _resolvedProfileUrlFormat;
         private readonly RequestDelegate _next;
         private readonly UserManager<ApplicationUser> _userManager;

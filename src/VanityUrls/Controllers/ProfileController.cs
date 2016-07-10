@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using VanityUrls.Models;
 using VanityUrls.Models.ProfileViewModel;
 using VanityUrls.Features;
+using Microsoft.EntityFrameworkCore;
 
 namespace VanityUrls.Controllers
 {
@@ -29,6 +30,15 @@ namespace VanityUrls.Controllers
             }
 
             return View(new Profile { Email = user.Email, Name = user.UserName, VanityUrl = user.VanityUrl });
+        }
+
+        public async Task<JsonResult> ValidateVanityUrl(string vanityUrl)
+        {
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.VanityUrl == vanityUrl);
+
+            //TODO: Also check the selected vanityUrl doesnt match any of our controllers and routes!
+
+            return Json(user == null);
         }
     }
 }
