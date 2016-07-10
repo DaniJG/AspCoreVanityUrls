@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using VanityUrls.Models;
 using VanityUrls.Models.ProfileViewModel;
-using VanityUrls.Features;
 using Microsoft.EntityFrameworkCore;
+using VanityUrls.Configuration;
 
 namespace VanityUrls.Controllers
 {
@@ -22,8 +22,7 @@ namespace VanityUrls.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
-            var resolvedUserFeature = HttpContext.Features.Get<VanityUrlResolvedUser>();
-            var user = resolvedUserFeature?.User;
+            var user = HttpContext.Items[VanityUrlConstants.ResolvedUserContextItem] as ApplicationUser;           
             if (user == null)
             {
                 user = await _userManager.FindByIdAsync(id);

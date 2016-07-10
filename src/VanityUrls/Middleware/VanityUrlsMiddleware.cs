@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using VanityUrls.Configuration;
-using VanityUrls.Features;
 using VanityUrls.Models;
 
 namespace VanityUrls.Middleware
@@ -61,8 +60,8 @@ namespace VanityUrls.Middleware
             //Replace the request path so the next middleware (MVC) uses the resolved path
             context.Request.Path = String.Format(_resolvedProfileUrlFormat, user.Id);
 
-            //Save the user as a request feature so we don't need to fetch it again from the DB
-            context.Features.Set(new VanityUrlResolvedUser { User = user });
+            //Save the user into the HttpContext so we don't need to fetch it again from the DB in the controller action
+            context.Items[VanityUrlConstants.ResolvedUserContextItem] = user;
         }
 
         private bool IsVanityUrl(string path)
