@@ -19,10 +19,13 @@
     <div class="form-group">
         <label asp-for="VanityUrl" class="col-md-2 control-label"></label>
         <div class="col-md-10">
-            <input asp-for="VanityUrl" class="form-control" />
+            <div class="input-group">
+                <span class="input-group-addon" id="vanity-url-addon">@ViewContext.HttpContext.Request.Host/</span>
+                <input asp-for="VanityUrl" class="form-control" aria-describedby="vanity-url-addon"/>
+            </div>            
             <span asp-validation-for="VanityUrl" class="text-danger"></span>
         </div>
-    </div>
+    </div>   
     <div class="form-group">
         <label asp-for="Password" class="col-md-2 control-label"></label>
         <div class="col-md-10">
