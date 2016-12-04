@@ -12,6 +12,9 @@ using VanityUrls.Models;
 
 namespace VanityUrls.Middleware
 {
+    // This middleware could be replaced by the new Rewrite middleware and a customVanityUrlsRewriteRule in ASP.Net Core 1.1
+    // I might still prefer this custom middleware. It supports async code and feels a better approach when involving business logic.
+
     //See http://stackoverflow.com/questions/36179304/dynamic-url-rewriting-with-mvc-and-asp-net-core/36180880#36180880
     public class VanityUrlsMiddleware
     {
@@ -19,7 +22,7 @@ namespace VanityUrls.Middleware
         private readonly string _resolvedProfileUrlFormat;
         private readonly RequestDelegate _next;
         private readonly UserManager<ApplicationUser> _userManager;
-        
+
         public VanityUrlsMiddleware(RequestDelegate next, UserManager<ApplicationUser> userManager, IOptions<VanityUrlsMiddlewareOptions> options)
         {
             _next = next;

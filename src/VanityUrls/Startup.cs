@@ -14,6 +14,7 @@ using VanityUrls.Models;
 using VanityUrls.Services;
 using VanityUrls.Middleware;
 using VanityUrls.Configuration;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace VanityUrls
 {
@@ -62,7 +63,8 @@ namespace VanityUrls
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();            
+            services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<VanityUrlsRewriteRule>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,8 +91,10 @@ namespace VanityUrls
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 
-
-            app.UseMiddleware<VanityUrlsMiddleware>();
+            var options = new RewriteOptions()
+                .Add(app.ApplicationServices.GetService<VanityUrlsRewriteRule>());
+            app.UseRewriter(options);
+            //app.UseMiddleware<VanityUrlsMiddleware>(); -  Can be replaced with the rewrite rule above. I might still prefer the middleware in this case though!
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
